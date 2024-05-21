@@ -32,13 +32,13 @@ export class User {
   @ApiProperty({ example: 'ISFJ' })
   mbti: string;
 
-  @Column({ name: 'age_range', type: 'enum', enum: AgeRangeEnum, nullable: true })
+  @Column({ name: 'age_range', type: 'enum', enum: AgeRangeEnum, default: AgeRangeEnum.ETC, nullable: true })
   @ApiProperty({ example: '20대' })
-  ageRange: number;
+  ageRange: AgeRangeEnum;
 
   @Column({ type: 'enum', enum: GenderEnum, default: GenderEnum.ETC, nullable: true })
   @ApiProperty({ example: 'etc' })
-  gender: string;
+  gender: GenderEnum;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   @ApiProperty({ example: '서울' })
@@ -46,7 +46,7 @@ export class User {
 
   @Column({ name: 'socia_type', type: 'enum', enum: SocialTypeEnum, default: SocialTypeEnum.LOCAL })
   @ApiProperty({ example: 'local' })
-  socialType: string;
+  socialType: SocialTypeEnum;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   @ApiProperty({ example: '2024-01-01T00:00:00Z' })

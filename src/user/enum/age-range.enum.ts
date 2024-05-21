@@ -7,4 +7,5 @@ export enum AgeRangeEnum {
   SIXTIES = '60대',
   SEVENTIES = '70대',
   EIGHTIES_AND_ABOVE = '80대 이상',
+  ETC = 'etc',
 }
