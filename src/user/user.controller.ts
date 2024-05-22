@@ -39,22 +39,13 @@ export class UserController {
   }
 
   @Post()
-  @ApiOperation({
-    summary: '새 사용자 생성',
-    description: '새로운 사용자를 생성합니다.',
-  })
-  @ApiResponse({
-    status: 201,
-    description: '성공적으로 사용자가 생성되었습니다.',
-    type: User,
-  })
+  @ApiOperation({ summary: '새 사용자 생성', description: '새로운 사용자를 생성합니다.' })
+  @ApiResponse({ status: 201, description: '성공적으로 사용자가 생성되었습니다.', type: User })
   create(@Body() createUserDto: CreateUserDto): Promise<User> {
     const user = new User();
     user.email = createUserDto.email;
     user.name = createUserDto.name;
     user.profileImage = createUserDto.profileImage;
-    user.age = createUserDto.age;
-    user.socialId = createUserDto.socialId;
     return this.userService.create(user);
   }
 
