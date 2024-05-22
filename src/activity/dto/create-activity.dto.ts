@@ -3,13 +3,13 @@ import { ActivityType, ActivityStatus } from '../entity/activity.entity';
 
 export class CreateActivityDto {
   @ApiProperty({ example: 1, description: '연관된 카테고리의 식별자' })
-  category_id: number;
+  categoryId: number;
 
   @ApiProperty({ example: '팀 미팅', description: '활동의 제목' })
   title: string;
 
   @ApiProperty({ example: 'image.jpg', description: '활동의 커버 이미지 URL' })
-  cover_image: string;
+  coverImage: string;
 
   @ApiProperty({ enum: ActivityType, description: '활동의 유형' })
   type: ActivityType;
@@ -24,13 +24,13 @@ export class CreateActivityDto {
     example: '2023-01-01T10:00:00Z',
     description: '활동의 시작 날짜 및 시간',
   })
-  start_date: Date;
+  startDate: Date;
 
   @ApiProperty({
     example: '2023-01-01T12:00:00Z',
     description: '활동의 종료 날짜 및 시간',
   })
-  end_date: Date;
+  endDate: Date;
 
   @ApiProperty({ example: '메인 홀', description: '활동의 위치' })
   location: string;

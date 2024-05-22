@@ -32,8 +32,8 @@ export class Activity {
     description: 'activity-category의 ID ',
     type: Number,
   })
-  @Column('bigint')
-  category_id: number;
+  @Column({ name: 'category_id', type: 'bigint' })
+  categoryId: number;
 
   @ManyToOne(() => ActivityCategory, (category) => category.activities)
   @JoinColumn({ name: 'category_id' })
@@ -44,8 +44,8 @@ export class Activity {
   title: string;
 
   @ApiProperty({ example: 'image.jpg', description: '활동의 커버 이미지 URL' })
-  @Column({ type: 'varchar', length: 255 })
-  cover_image: string;
+  @Column({ name: 'cover_image', type: 'varchar', length: 255 })
+  coverImage: string;
 
   @ApiProperty({ enum: ActivityType, description: '활동의 유형' })
   @Column({
@@ -69,15 +69,15 @@ export class Activity {
     example: '2023-01-01T10:00:00Z',
     description: '활동의 시작 날짜 및 시간',
   })
-  @Column({ type: 'datetime' })
-  start_date: Date;
+  @Column({ name: 'start_date', type: 'datetime' })
+  startDate: Date;
 
   @ApiProperty({
     example: '2023-01-01T12:00:00Z',
     description: '활동의 종료 날짜 및 시간',
   })
-  @Column({ type: 'datetime' })
-  end_date: Date;
+  @Column({ name: 'end_date', type: 'datetime' })
+  endDate: Date;
 
   @ApiProperty({ example: '메인 홀', description: '활동의 위치' })
   @Column({ type: 'varchar', length: 255 })

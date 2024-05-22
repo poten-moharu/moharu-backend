@@ -32,6 +32,6 @@ export class ActivityService {
     await this.activityRepository.delete(id);
   }
   async findByCategory(categoryId: number): Promise<Activity[]> {
-    return this.activityRepository.find({ where: { category_id: categoryId } });
+    return this.activityRepository.find({ where: { categoryId: categoryId } });
   }
 }
