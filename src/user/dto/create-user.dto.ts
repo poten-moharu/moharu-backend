@@ -15,10 +15,4 @@ export class CreateUserDto {
     description: '사용자의 프로필 이미지 URL',
   })
   profileImage: string;
-
-  @ApiProperty({ example: 25, description: '사용자의 나이' })
-  age: number;
-
-  @ApiProperty({ example: '123456789', description: '사용자의 소셜 ID' })
-  socialId: string;
 }
