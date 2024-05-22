@@ -2,9 +2,16 @@ import { Module } from '@nestjs/common';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeORMDevConfig } from './configs/typeorm.config';
+import { ActivityModule } from './activity/activity.module';
+import { ActivityCategoryModule } from './activity-category/activity-category.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(typeORMDevConfig), UserModule],
+  imports: [
+    TypeOrmModule.forRoot(typeORMDevConfig),
+    UserModule,
+    ActivityModule,
+    ActivityCategoryModule,
+  ],
   controllers: [],
   providers: [],
 })
