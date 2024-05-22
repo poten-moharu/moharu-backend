@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService as NestMailerService } from '@nestjs-modules/mailer';
+import 'dotenv/config';
 
 @Injectable()
 export class MailerService {

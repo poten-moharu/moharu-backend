@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MailerModule as NestMailerModule } from '@nestjs-modules/mailer';
 import { MailerService } from './mailer.service';
+import { MailVerifyService } from './mail-verify.service';
+import 'dotenv/config';
 
 @Module({
   imports: [
@@ -19,7 +21,7 @@ import { MailerService } from './mailer.service';
       },
     }),
   ],
-  providers: [MailerService],
+  providers: [MailerService, MailVerifyService],
   exports: [MailerService],
 })
 export class MailerModule {}
