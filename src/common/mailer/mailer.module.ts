@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { MailerModule as NestMailerModule } from '@nestjs-modules/mailer';
 import { MailerService } from './mailer.service';
 import { MailVerifyService } from './mail-verify.service';
+import { EmailVerificationRepository } from './emailVerification.repository';
 import 'dotenv/config';
 
 @Module({
@@ -21,7 +22,7 @@ import 'dotenv/config';
       },
     }),
   ],
-  providers: [MailerService, MailVerifyService],
-  exports: [MailerService],
+  providers: [MailerService, MailVerifyService, EmailVerificationRepository],
+  exports: [MailerService, EmailVerificationRepository],
 })
 export class MailerModule {}
