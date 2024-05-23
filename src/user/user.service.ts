@@ -2,12 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
 import { User } from './entity/user.entity';
+import { EmailCodeSendDto } from '../common/mailer/dto/email-code.dto';
+import { MailVerifyService } from 'src/common/mailer/mail-verify.service';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(UserRepository)
-    private usersRepository: UserRepository,
+    @InjectRepository(UserRepository) private usersRepository: UserRepository,
+    private readonly mailVerifyService: MailVerifyService,
   ) {}
 
   async findAll(): Promise<User[]> {
@@ -23,5 +25,9 @@ export class UserService {
 
   async remove(id: number): Promise<void> {
     await this.usersRepository.delete(id);
+  }
+
+  async emailCodeSend(emailCodeSendDto: EmailCodeSendDto) {
+    await this.mailVerifyService.emailCodeSend(emailCodeSendDto.email);
   }
 }

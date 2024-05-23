@@ -3,6 +3,7 @@ import { UserService } from './user.service';
 import { User } from './entity/user.entity';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
+import { EmailCodeSendDto } from '../common/mailer/dto/email-code.dto';
 
 @ApiTags('user')
 @Controller('user')
@@ -61,5 +62,10 @@ export class UserController {
   @ApiResponse({ status: 404, description: '사용자를 찾을 수 없습니다.' })
   remove(@Param('id') id: string): Promise<void> {
     return this.userService.remove(Number(id));
+  }
+
+  @Post('email')
+  emailCodeSend(@Body() emailCodeSendDto: EmailCodeSendDto) {
+    return this.userService.emailCodeSend(emailCodeSendDto);
   }
 }
