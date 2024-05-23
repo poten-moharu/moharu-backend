@@ -4,6 +4,7 @@ import { UserRepository } from './user.repository';
 import { User } from './entity/user.entity';
 import { EmailCodeSendDto } from '../common/mailer/dto/email-code.dto';
 import { MailVerifyService } from 'src/common/mailer/mail-verify.service';
+import { EmailCodeVerifyDto } from 'src/common/mailer/dto/email-verify.dto';
 
 @Injectable()
 export class UserService {
@@ -29,5 +30,9 @@ export class UserService {
 
   async emailCodeSend(emailCodeSendDto: EmailCodeSendDto) {
     await this.mailVerifyService.emailCodeSend(emailCodeSendDto.email);
+  }
+
+  async emailCodeVerify(emailCodeVerifyDto: EmailCodeVerifyDto) {
+    await this.mailVerifyService.emailCodeVerify(emailCodeVerifyDto);
   }
 }

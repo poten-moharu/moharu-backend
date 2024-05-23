@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MailerService } from './mailer.service';
 import { EmailVerificationRepository } from './emailVerification.repository';
+import { EmailCodeVerifyDto } from './dto/email-verify.dto';
 
 @Injectable()
 export class MailVerifyService {
@@ -24,5 +25,25 @@ export class MailVerifyService {
 
     await this.mailerService.sendMail(email, subject, content);
     await this.emailVerificationRepository.save(emailCode);
+  }
+
+  async emailCodeVerify(dto: EmailCodeVerifyDto) {
+    const emailCodeData = await this.emailVerificationRepository.findOneBy({ email: dto.email });
+
+    if (!emailCodeData) {
+      throw new BadRequestException('잘못된 요청입니다.');
+    }
+
+    if (dto.code !== emailCodeData.verificationCode) {
+      throw new BadRequestException('잘못된 인증 코드입니다.');
+    }
+
+    const currentTime = new Date();
+    if (currentTime > emailCodeData.expiresAt) {
+      throw new BadRequestException('인증 코드가 만료되었습니다.');
+    }
+
+    emailCodeData.isVerified = true;
+    return await this.emailVerificationRepository.save(emailCodeData);
   }
 }

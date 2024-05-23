@@ -4,6 +4,7 @@ import { User } from './entity/user.entity';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { EmailCodeSendDto } from '../common/mailer/dto/email-code.dto';
+import { EmailCodeVerifyDto } from '../common/mailer/dto/email-verify.dto';
 
 @ApiTags('user')
 @Controller('user')
@@ -67,5 +68,10 @@ export class UserController {
   @Post('email')
   emailCodeSend(@Body() emailCodeSendDto: EmailCodeSendDto) {
     return this.userService.emailCodeSend(emailCodeSendDto);
+  }
+
+  @Post('email/verify')
+  emailCodeVerify(@Body() emailCodeVerifyDto: EmailCodeVerifyDto) {
+    return this.userService.emailCodeVerify(emailCodeVerifyDto);
   }
 }
