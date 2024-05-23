@@ -1,7 +1,14 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './entity/user.entity';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiNotFoundResponse,
+  ApiForbiddenResponse,
+  ApiNotAcceptableResponse,
+} from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { EmailCodeSendDto } from '../common/mailer/dto/email-code.dto';
 import { EmailCodeVerifyDto } from '../common/mailer/dto/email-verify.dto';
@@ -66,11 +73,16 @@ export class UserController {
   }
 
   @Post('email')
+  @ApiOperation({ summary: '이메일 인증코드 발송', description: '이메일로 인증코드를 발송합니다.' })
   emailCodeSend(@Body() emailCodeSendDto: EmailCodeSendDto) {
     return this.userService.emailCodeSend(emailCodeSendDto);
   }
 
   @Post('email/verify')
+  @ApiOperation({ summary: '이메일 인증코드 검증', description: '이메일, 인증코드가 맞는지 검증합니다.' })
+  @ApiNotFoundResponse({ description: '잘못된 요청입니다.' })
+  @ApiForbiddenResponse({ description: '잘못된 인증 코드입니다.' })
+  @ApiNotAcceptableResponse({ description: '인증 코드가 만료되었습니다.' })
   emailCodeVerify(@Body() emailCodeVerifyDto: EmailCodeVerifyDto) {
     return this.userService.emailCodeVerify(emailCodeVerifyDto);
   }
