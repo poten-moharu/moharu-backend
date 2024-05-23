@@ -5,6 +5,7 @@ import { typeORMDevConfig } from './configs/typeorm.config';
 import { ActivityModule } from './activity/activity.module';
 import { ActivityCategoryModule } from './activity-category/activity-category.module';
 import { ActivityWishModule } from './activity-wish/activity-wish.module';
+import { MailerModule } from './common/mailer/mailer.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { ActivityWishModule } from './activity-wish/activity-wish.module';
     ActivityModule,
     ActivityCategoryModule,
     ActivityWishModule,
+    MailerModule,
   ],
   controllers: [],
   providers: [],
