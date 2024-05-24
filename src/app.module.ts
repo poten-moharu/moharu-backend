@@ -7,6 +7,7 @@ import { ActivityCategoryModule } from './activity-category/activity-category.mo
 import { ActivityWishModule } from './activity-wish/activity-wish.module';
 import { MailerModule } from './common/mailer/mailer.module';
 import { AuthModule } from './auth/auth.module';
+import { ActivityReservationModule } from './activity-reservation/activity-reservation.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AuthModule } from './auth/auth.module';
     ActivityWishModule,
     AuthModule,
     MailerModule,
+    ActivityReservationModule,
   ],
   controllers: [],
   providers: [],
