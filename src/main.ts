@@ -9,6 +9,7 @@ async function bootstrap() {
     .setTitle('모하루 API 문서')
     .setDescription('모하루 화이팅')
     .setVersion('1.0')
+    .addBearerAuth({ type: 'http', bearerFormat: 'JWT', name: 'Authorization', in: 'header' }, 'accessToken')
     .addTag('users')
     .build();
 
