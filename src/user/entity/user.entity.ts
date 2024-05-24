@@ -95,9 +95,9 @@ export class User {
   @ApiProperty({ example: '2024-01-01T00:00:00Z' })
   deletedAt: Date;
 
-  @OneToMany(() => ActivityWish, (activityWish) => activityWish.userId)
+  @OneToMany(() => ActivityWish, (activityWish) => activityWish.userId, { nullable: true })
   activityWishes: ActivityWish[];
 
-  @OneToMany(() => Activity, (activities) => activities.id)
+  @OneToMany(() => Activity, (activities) => activities.id, { nullable: true })
   activities: Activity[];
 }
