@@ -19,14 +19,8 @@ export class UserController {
   }
 
   @Delete(':id')
-  @ApiOperation({
-    summary: '사용자 삭제',
-    description: 'ID를 사용하여 특정 사용자를 삭제합니다.',
-  })
-  @ApiResponse({
-    status: 200,
-    description: '성공적으로 사용자가 삭제되었습니다.',
-  })
+  @ApiOperation({ summary: '사용자 삭제', description: 'ID를 사용하여 특정 사용자를 삭제합니다.' })
+  @ApiResponse({ status: 200, description: '성공적으로 사용자가 삭제되었습니다.' })
   @ApiResponse({ status: 404, description: '사용자를 찾을 수 없습니다.' })
   remove(@Param('id') id: string): Promise<void> {
     return this.userService.remove(Number(id));
