@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ActivityWishRepository } from './activity-wish.repository';
 import { ActivityWish } from './entity/activity-wish.entity';
+import { ActivityRepository } from '../activity/activity.repository';
 
 @Injectable()
 export class ActivityWishService {
@@ -26,9 +27,4 @@ export class ActivityWishService {
   }
 
   // 특정 액티비티에 대한 모든 '좋아요'를 조회
-  async findAllWishesByActivityId(activitiesId: number): Promise<ActivityWish[]> {
-    return this.activityWishRepository.find({
-      where: { activitiesId: activitiesId },
-    });
-  }
 }

@@ -107,4 +107,8 @@ export class UserService {
   async remove(id: number): Promise<void> {
     await this.usersRepository.delete(id);
   }
+
+  async update(createUserDto: CreateUserDto) {
+    return this.usersRepository.save(createUserDto);
+  }
 }
