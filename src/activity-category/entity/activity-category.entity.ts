@@ -23,6 +23,6 @@ export class ActivityCategory {
   @Column({ type: 'varchar', length: 255 })
   icon: string;
 
-  @OneToMany(() => Activity, (activity) => activity.category)
+  @OneToMany(() => Activity, (activity) => activity.activityCategory)
   activities: Activity[];
 }

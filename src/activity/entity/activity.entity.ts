@@ -31,7 +31,7 @@ export class Activity {
 
   @ManyToOne(() => ActivityCategory, (category) => category.activities)
   @JoinColumn({ name: 'category_id' })
-  category: ActivityCategory;
+  activityCategory: ActivityCategory;
 
   @ApiProperty({ example: '팀 미팅', description: '활동의 제목' })
   @Column({ type: 'varchar', length: 255 })

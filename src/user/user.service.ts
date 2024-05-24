@@ -2,23 +2,18 @@ import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
 import { User } from './entity/user.entity';
-import { EmailCodeSendDto } from '../common/mailer/dto/email-code.dto';
-import { MailVerifyService } from 'src/common/mailer/mail-verify.service';
-import { EmailCodeVerifyDto } from 'src/common/mailer/dto/email-verify.dto';
 import { SocialTypeEnum } from './enum';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
+import { ActivityWishRepository } from 'src/activity-wish/activity-wish.repository';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserRepository) private usersRepository: UserRepository,
-    private readonly mailVerifyService: MailVerifyService,
+    @InjectRepository(ActivityWishRepository) private activityWishRepository: ActivityWishRepository,
   ) {}
 
-  async findAll(): Promise<User[]> {
-    return this.usersRepository.find();
-  }
   async createUserFromSocialData(createUserDto: CreateUserDto, socialType: SocialTypeEnum): Promise<User> {
     const user = new User();
     user.email = createUserDto.email;
@@ -38,6 +33,7 @@ export class UserService {
   async findByEmailAndSocialType(email: string, socialType: SocialTypeEnum) {
     return await this.usersRepository.findByEmailAndSocialType(email, socialType);
   }
+
   async createUserFromLocal(createUserDto: CreateUserDto) {
     // 이메일 중복 체크
     const existingUser = await this.usersRepository.findByEmailAndSocialType(createUserDto.email, SocialTypeEnum.LOCAL);
@@ -81,26 +77,34 @@ export class UserService {
     return user;
   }
 
+  async findBySocialIdAndSocialType(socialId: string, socialType: SocialTypeEnum) {
+    return await this.usersRepository.findBySocialIdAndSocialType(socialId, socialType);
+  }
+
   async findOne(id: number): Promise<User> {
     return this.usersRepository.findOneBy({ id });
   }
-  async create(user: User): Promise<User> {
-    return this.usersRepository.save(user);
+
+  async getUserProfile(id: number) {
+    const userProfile = await this.usersRepository.findUserProfile(id);
+    const wishTotalCount = userProfile.activityWishes.length;
+
+    let categoryCount = {};
+    if (userProfile.activityWishes.length > 0) {
+      categoryCount = userProfile.activityWishes.reduce((acc, wish) => {
+        const activityType = wish.activity.activityCategory.name;
+        if (!acc[activityType]) {
+          acc[activityType] = 0;
+        }
+        acc[activityType]++;
+        return acc;
+      }, {});
+    }
+
+    return { userProfile, wishTotalCount, categoryCount };
   }
 
   async remove(id: number): Promise<void> {
     await this.usersRepository.delete(id);
-  }
-
-  async emailCodeSend(emailCodeSendDto: EmailCodeSendDto) {
-    await this.mailVerifyService.emailCodeSend(emailCodeSendDto.email);
-  }
-
-  async emailCodeVerify(emailCodeVerifyDto: EmailCodeVerifyDto) {
-    await this.mailVerifyService.emailCodeVerify(emailCodeVerifyDto);
-  }
-
-  async findBySocialIdAndSocialType(socialId: string, socialType: SocialTypeEnum) {
-    return await this.usersRepository.findBySocialIdAndSocialType(socialId, socialType);
   }
 }
