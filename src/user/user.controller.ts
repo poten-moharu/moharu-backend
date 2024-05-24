@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './entity/user.entity';
 import {
@@ -8,15 +8,26 @@ import {
   ApiNotFoundResponse,
   ApiForbiddenResponse,
   ApiNotAcceptableResponse,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { EmailCodeSendDto } from '../common/mailer/dto/email-code.dto';
 import { EmailCodeVerifyDto } from '../common/mailer/dto/email-verify.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { User as GetCurrentUser } from './utils/user.decorator';
 
 @ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @Get('jwt')
+  @ApiBearerAuth('accessToken')
+  @UseGuards(AuthGuard())
+  async authMe(@GetCurrentUser() user: User) {
+    console.log('🚀  id:', user.id);
+    return `id: ${user.id}`;
+  }
 
   @Get()
   @ApiOperation({
