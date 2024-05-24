@@ -15,4 +15,11 @@ export class UserRepository extends Repository<User> {
       .andWhere('users.socialType = :socialType', { socialType })
       .getOne();
   }
+
+  async findByEmailAndSocialType(email: string, socialType: SocialTypeEnum) {
+    return await this.createQueryBuilder('users')
+      .where('users.email = :email', { email })
+      .andWhere('users.socialType = :socialType', { socialType })
+      .getOne();
+  }
 }
