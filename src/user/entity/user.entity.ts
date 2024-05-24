@@ -1,11 +1,4 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-  DeleteDateColumn,
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { GenderEnum, SocialTypeEnum, AgeRangeEnum } from '../enum';
 
@@ -76,7 +69,7 @@ export class User {
   @ApiProperty({ example: 'local' })
   socialType: SocialTypeEnum;
 
-  @Column({ name: 'social_id', type: 'varchar', length: 255 })
+  @Column({ name: 'social_id', type: 'varchar', length: 255, nullable: true })
   @ApiProperty({ example: 'social-id-key' })
   socialId: string;
 

@@ -61,4 +61,10 @@ export class CreateUserDto {
     description: '소셜 로그인 ID',
   })
   socialId: string;
+
+  @ApiProperty({
+    example: 'sefijseifjsefjiesfji',
+    description: '사용자 패스워드',
+  })
+  password: string;
 }

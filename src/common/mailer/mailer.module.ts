@@ -23,6 +23,6 @@ import 'dotenv/config';
     }),
   ],
   providers: [MailerService, MailVerifyService, EmailVerificationRepository],
-  exports: [MailerService, EmailVerificationRepository],
+  exports: [MailerService, MailVerifyService, EmailVerificationRepository],
 })
 export class MailerModule {}

@@ -4,9 +4,11 @@ import { AuthService } from './auth.service';
 import { UserModule } from '../user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategy/jwt-auth.strategy';
+import { MailerModule } from '../common/mailer/mailer.module';
 @Module({
   imports: [
     UserModule,
+    MailerModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: {
