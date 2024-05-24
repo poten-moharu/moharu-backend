@@ -10,12 +10,11 @@ import { User as GetCurrentUser } from './utils/user.decorator';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get('jwt')
+  @Get('')
   @ApiBearerAuth('accessToken')
   @UseGuards(AuthGuard())
-  async authMe(@GetCurrentUser() user: User) {
-    console.log('🚀  id:', user.id);
-    return `id: ${user.id}`;
+  async getUserProfile(@GetCurrentUser() user: User) {
+    return this.userService.getUserProfile(user.id);
   }
 
   @Delete(':id')

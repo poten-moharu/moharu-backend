@@ -1,6 +1,16 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+  OneToMany,
+} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { GenderEnum, SocialTypeEnum, AgeRangeEnum } from '../enum';
+import { ActivityWish } from 'src/activity-wish/entity/activity-wish.entity';
+import { Activity } from 'src/activity/entity/activity.entity';
 
 @Entity('users')
 export class User {
@@ -84,4 +94,10 @@ export class User {
   @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp' })
   @ApiProperty({ example: '2024-01-01T00:00:00Z' })
   deletedAt: Date;
+
+  @OneToMany(() => ActivityWish, (activityWish) => activityWish.userId)
+  activityWishes: ActivityWish[];
+
+  @OneToMany(() => Activity, (activities) => activities.id)
+  activities: Activity[];
 }

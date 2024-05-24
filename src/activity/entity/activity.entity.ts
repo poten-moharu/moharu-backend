@@ -1,10 +1,4 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToOne,
-  JoinColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { ActivityCategory } from '../../activity-category/entity/activity-category.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -37,7 +31,7 @@ export class Activity {
 
   @ManyToOne(() => ActivityCategory, (category) => category.activities)
   @JoinColumn({ name: 'category_id' })
-  category: ActivityCategory;
+  activityCategory: ActivityCategory;
 
   @ApiProperty({ example: '팀 미팅', description: '활동의 제목' })
   @Column({ type: 'varchar', length: 255 })

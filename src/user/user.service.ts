@@ -5,10 +5,14 @@ import { User } from './entity/user.entity';
 import { SocialTypeEnum } from './enum';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
+import { ActivityWishRepository } from 'src/activity-wish/activity-wish.repository';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectRepository(UserRepository) private usersRepository: UserRepository) {}
+  constructor(
+    @InjectRepository(UserRepository) private usersRepository: UserRepository,
+    @InjectRepository(ActivityWishRepository) private activityWishRepository: ActivityWishRepository,
+  ) {}
 
   async createUserFromSocialData(createUserDto: CreateUserDto, socialType: SocialTypeEnum): Promise<User> {
     const user = new User();
@@ -79,6 +83,25 @@ export class UserService {
 
   async findOne(id: number): Promise<User> {
     return this.usersRepository.findOneBy({ id });
+  }
+
+  async getUserProfile(id: number) {
+    const userProfile = await this.usersRepository.findUserProfile(id);
+    const wishTotalCount = userProfile.activityWishes.length;
+
+    let categoryCount = {};
+    if (userProfile.activityWishes.length > 0) {
+      categoryCount = userProfile.activityWishes.reduce((acc, wish) => {
+        const activityType = wish.activity.activityCategory.name;
+        if (!acc[activityType]) {
+          acc[activityType] = 0;
+        }
+        acc[activityType]++;
+        return acc;
+      }, {});
+    }
+
+    return { userProfile, wishTotalCount, categoryCount };
   }
 
   async remove(id: number): Promise<void> {

@@ -22,4 +22,29 @@ export class UserRepository extends Repository<User> {
       .andWhere('users.socialType = :socialType', { socialType })
       .getOne();
   }
+
+  async findUserProfile(id: number) {
+    return await this.createQueryBuilder('user')
+      .leftJoinAndSelect('user.activityWishes', 'activityWish')
+      .leftJoinAndSelect('activityWish.activity', 'activity')
+      .leftJoinAndSelect('activity.activityCategory', 'activityCategory')
+      .select([
+        'user.id',
+        'user.name',
+        'user.profileImage',
+        'user.mbti',
+        'user.gender',
+        'user.region',
+        'user.ageRange',
+        'activityWish.id',
+        'activityWish.activitiesId',
+        'activity.id',
+        'activity.coverImage',
+        'activity.type',
+        'activityCategory.name',
+      ])
+      .where('user.id = :userId', { userId: id })
+      .orderBy('activity.id', 'DESC')
+      .getOne();
+  }
 }
