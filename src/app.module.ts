@@ -4,6 +4,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeORMDevConfig } from './configs/typeorm.config';
 import { ActivityModule } from './activity/activity.module';
 import { ActivityCategoryModule } from './activity-category/activity-category.module';
+import { ActivityWishModule } from './activity-wish/activity-wish.module';
+import { MailerModule } from './common/mailer/mailer.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -11,6 +14,9 @@ import { ActivityCategoryModule } from './activity-category/activity-category.mo
     UserModule,
     ActivityModule,
     ActivityCategoryModule,
+    ActivityWishModule,
+    AuthModule,
+    MailerModule,
   ],
   controllers: [],
   providers: [],
