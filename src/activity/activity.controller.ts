@@ -3,10 +3,11 @@ import { ActivityService } from './activity.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { Activity } from './entity/activity.entity';
 import { OptionalAuthGuard } from '../auth/guards/jwt-optional-auth.guard';
-import { OptionalUser } from '../user/utils/user.decorator';
+import { OptionalUser, User } from '../user/utils/user.decorator';
 import { User as UserEntity } from '../user/entity/user.entity';
 import { ActivityWishService } from '../activity-wish/activity-wish.service';
 import { ActivityResponseDto } from './dto/activity-response.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @ApiTags('activities')
 @Controller('activities')
@@ -58,5 +59,20 @@ export class ActivityController {
   @ApiResponse({ status: 404, description: '활동을 찾을 수 없습니다.' })
   findOne(@Param('id') id: string) {
     return this.activityService.findOne(+id);
+  }
+  @Get('wish')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: '사용자의 모든 좋아요 조회',
+    description: '특정 사용자의 모든 좋아요 목록을 조회합니다.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: '좋아요 목록을 성공적으로 반환했습니다.',
+    type: [Activity],
+  })
+  findAllWishesByUserId(@User() user: UserEntity): Promise<Activity[]> {
+    return this.activityService.findAllWishedActivitiesByUserId(user.id);
   }
 }
