@@ -70,7 +70,9 @@ export class AuthController {
   @ApiBody({ type: String, description: '사용자의 이메일 주소' })
   @ApiResponse({ status: 200, description: '이메일 전송 성공' })
   @ApiResponse({ status: 400, description: '잘못된 요청' })
-  async sendEmail(email: string): Promise<void> {
+  async sendEmail(@Body() body: { email: string }): Promise<void> {
+    const { email } = body;
+    console.log(email);
     await this.authService.sendVerificationEmail(email);
   }
 

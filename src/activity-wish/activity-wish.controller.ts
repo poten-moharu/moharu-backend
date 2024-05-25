@@ -13,7 +13,7 @@ export class ActivityWishController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
+  @ApiBearerAuth('accessToken')
   @ApiOperation({
     summary: '액티비티 좋아요 추가',
     description: '사용자가 특정 액티비티에 대한 좋아요를 추가',
@@ -29,7 +29,7 @@ export class ActivityWishController {
 
   @Delete(':activitiesId')
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
+  @ApiBearerAuth('accessToken')
   @ApiOperation({
     summary: '액티비티 좋아요 취소',
     description: '사용자가 특정 액티비티에 대한 좋아요를 취소합니다.',
