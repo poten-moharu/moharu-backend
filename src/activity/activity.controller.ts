@@ -1,13 +1,14 @@
 import { Controller, Get, Param, UseGuards, Query } from '@nestjs/common';
 import { ActivityService } from './activity.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
-import { Activity } from './entity/activity.entity';
 import { OptionalAuthGuard } from '../auth/guards/jwt-optional-auth.guard';
 import { OptionalUser, User } from '../user/utils/user.decorator';
 import { User as UserEntity } from '../user/entity/user.entity';
 import { ActivityWishService } from '../activity-wish/activity-wish.service';
 import { ActivityResponseDto } from './dto/activity-response.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { ActivityDetailResponseDto } from './dto/activity-detail-response.dto';
+import { ActivityWishlistResponseDto } from './dto/activity-wishlist-response.dto';
 
 @ApiTags('activities')
 @Controller('activities')
@@ -50,19 +51,16 @@ export class ActivityController {
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'ID로 활동 조회' })
-  @ApiResponse({
-    status: 200,
-    description: '주어진 ID를 가진 활동을 반환합니다.',
-    type: Activity,
-  })
+  @ApiResponse({ status: 200, description: '활동 상세 정보를 반환합니다.', type: ActivityDetailResponseDto })
   @ApiResponse({ status: 404, description: '활동을 찾을 수 없습니다.' })
-  findOne(@Param('id') id: string) {
-    return this.activityService.findOne(+id);
+  @UseGuards(OptionalAuthGuard)
+  async findOne(@OptionalUser() user?: UserEntity, @Param('id') id?: string): Promise<ActivityDetailResponseDto> {
+    return this.activityService.findOne(user, +id);
   }
   @Get('wish')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @ApiQuery({ name: 'type', required: false, description: '타입(meeting,event,..)' })
   @ApiOperation({
     summary: '사용자의 모든 좋아요 조회',
     description: '특정 사용자의 모든 좋아요 목록을 조회합니다.',
@@ -70,9 +68,9 @@ export class ActivityController {
   @ApiResponse({
     status: 200,
     description: '좋아요 목록을 성공적으로 반환했습니다.',
-    type: [Activity],
+    type: ActivityWishlistResponseDto,
   })
-  findAllWishesByUserId(@User() user: UserEntity): Promise<Activity[]> {
-    return this.activityService.findAllWishedActivitiesByUserId(user.id);
+  findAllWishesByUserId(@User() user: UserEntity, @Query('type') type?: string): Promise<ActivityWishlistResponseDto> {
+    return this.activityService.findAllWishedActivitiesByUserId(user.id, type);
   }
 }
