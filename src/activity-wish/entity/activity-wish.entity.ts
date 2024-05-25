@@ -10,12 +10,12 @@ export class ActivityWish {
   @ApiProperty({ example: 1 })
   id: number;
 
-  @ManyToOne(() => User, (user) => user.id, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.id, { onDelete: 'CASCADE', nullable: true })
   @JoinColumn({ name: 'user_id' })
   @ApiProperty({ example: 1 })
   userId: number;
 
-  @ManyToOne(() => Activity, (activity) => activity.id, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Activity, (activity) => activity.id, { onDelete: 'CASCADE', nullable: true })
   @JoinColumn({ name: 'activities_id' })
   @ApiProperty({ example: 1 })
   activity: Activity;
