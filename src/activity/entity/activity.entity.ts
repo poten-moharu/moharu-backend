@@ -38,7 +38,7 @@ export class Activity {
   title: string;
 
   @ApiProperty({ example: 'image.jpg', description: '활동의 커버 이미지 URL' })
-  @Column({ name: 'cover_image', type: 'varchar', length: 255, nullable: true })
+  @Column({ name: 'cover_image', type: 'text', nullable: true })
   coverImage: string;
 
   @ApiProperty({ enum: ActivityType, description: '활동의 유형' })
