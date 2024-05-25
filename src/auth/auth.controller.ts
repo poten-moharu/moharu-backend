@@ -24,6 +24,17 @@ export class AuthController {
     return enumValue;
   }
 
+  @ApiOperation({ summary: '로컬 로그인' })
+  @ApiBody({ type: CreateUserDto })
+  @ApiResponse({ status: 201, description: '유저 생성 및 토큰 반환', type: CreateAuthResponseDto })
+  @ApiResponse({ status: 401, description: '잘못된 이메일 또는 비밀번호' })
+  @Post('local/login')
+  async localLogin(@Body() createUserDto: CreateUserDto): Promise<CreateAuthResponseDto> {
+    const user = await this.authService.validateLocalUser(createUserDto);
+    const accessToken = await this.authService.login(user);
+    return { accessToken, user };
+  }
+
   @ApiOperation({ summary: '소셜 로그인' })
   @ApiParam({ name: 'socialType', required: true, description: '소셜 로그인 타입', enum: SocialTypeEnum })
   @ApiBody({ type: CreateUserDto })
@@ -34,23 +45,13 @@ export class AuthController {
     @Param('socialType') socialType: string,
     @Body() createUserDto: CreateUserDto,
   ): Promise<CreateAuthResponseDto> {
+    console.log('daadawdawd');
     const socialTypeEnum = this.mapStringToSocialTypeEnum(socialType);
     let user = await this.authService.validateSocialUser(createUserDto, socialTypeEnum);
 
     if (!user) {
       user = await this.usersService.createUserFromSocialData(createUserDto, socialTypeEnum);
     }
-    const accessToken = await this.authService.login(user);
-    return { accessToken, user };
-  }
-
-  @ApiOperation({ summary: '로컬 로그인' })
-  @ApiBody({ type: CreateUserDto })
-  @ApiResponse({ status: 201, description: '유저 생성 및 토큰 반환', type: CreateAuthResponseDto })
-  @ApiResponse({ status: 401, description: '잘못된 이메일 또는 비밀번호' })
-  @Post('local/login')
-  async localLogin(@Body() createUserDto: CreateUserDto): Promise<CreateAuthResponseDto> {
-    const user = await this.authService.validateLocalUser(createUserDto);
     const accessToken = await this.authService.login(user);
     return { accessToken, user };
   }
