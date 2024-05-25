@@ -134,7 +134,7 @@ export class ActivityService {
   // 사용자가 좋아한 모든 액티비티를 조회
   async findAllWishedActivitiesByUserId(userId: number, type?: string): Promise<ActivityWishlistResponseDto> {
     const wishes = await this.activityWishRepository.findAllWishesByUserId(userId);
-    const activityIds = wishes.map((wish) => wish.activity.id);
+    const activityIds = wishes.map((wish) => wish.activitiesId);
 
     const query = this.activityRepository
       .createQueryBuilder('activity')

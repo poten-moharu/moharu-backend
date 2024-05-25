@@ -20,7 +20,7 @@ export class ActivityController {
 
   @Get()
   @UseGuards(OptionalAuthGuard)
-  @ApiBearerAuth() // JWT 인증 헤더 추가
+  @ApiBearerAuth('accessToken') // JWT 인증 헤더 추가
   @ApiOperation({
     summary: '모든 활동 조회',
     description: '인증이 선택적입니다. 인증된 사용자는 추가 정보를 받을 수 있습니다.',
@@ -57,9 +57,9 @@ export class ActivityController {
   async findOne(@OptionalUser() user?: UserEntity, @Param('id') id?: string): Promise<ActivityDetailResponseDto> {
     return this.activityService.findOne(user, +id);
   }
-  @Get('wish')
+  @Get('wish/list')
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
+  @ApiBearerAuth('accessToken')
   @ApiQuery({ name: 'type', required: false, description: '타입(meeting,event,..)' })
   @ApiOperation({
     summary: '사용자의 모든 좋아요 조회',
