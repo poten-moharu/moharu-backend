@@ -6,12 +6,14 @@ import { SocialTypeEnum } from './enum';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { ActivityWishRepository } from 'src/activity-wish/activity-wish.repository';
+import { ActivityCategoryRepository } from 'src/activity-category/activity-category.repository';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserRepository) private usersRepository: UserRepository,
     @InjectRepository(ActivityWishRepository) private activityWishRepository: ActivityWishRepository,
+    @InjectRepository(ActivityCategoryRepository) private activityCategoryRepository: ActivityCategoryRepository,
   ) {}
 
   async createUserFromSocialData(createUserDto: CreateUserDto, socialType: SocialTypeEnum): Promise<User> {
@@ -87,17 +89,23 @@ export class UserService {
 
   async getUserProfile(id: number) {
     const userProfile = await this.usersRepository.findUserProfile(id);
-
     const activityWishes = userProfile.activityWishes;
 
-    const categoryCount = activityWishes.reduce((acc, wish) => {
-      const categoryName = wish.activity.activityCategory.name;
-      if (!acc[categoryName]) {
-        acc[categoryName] = 0;
-      }
-      acc[categoryName]++;
+    const allCategories = await this.activityCategoryRepository.find();
+
+    const categoryCount = allCategories.reduce((acc, category) => {
+      acc[category.name] = 0;
       return acc;
     }, {});
+
+    activityWishes.forEach((wish) => {
+      const categoryName = wish.activity.activityCategory.name;
+      if (categoryCount.hasOwnProperty(categoryName)) {
+        categoryCount[categoryName]++;
+      } else {
+        categoryCount[categoryName] = 1;
+      }
+    });
 
     return {
       userProfile: {
