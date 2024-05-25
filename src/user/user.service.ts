@@ -87,21 +87,43 @@ export class UserService {
 
   async getUserProfile(id: number) {
     const userProfile = await this.usersRepository.findUserProfile(id);
-    const wishTotalCount = userProfile.activityWishes.length;
 
-    let categoryCount = {};
-    if (userProfile.activityWishes.length > 0) {
-      categoryCount = userProfile.activityWishes.reduce((acc, wish) => {
-        const activityType = wish.activity.activityCategory.name;
-        if (!acc[activityType]) {
-          acc[activityType] = 0;
-        }
-        acc[activityType]++;
-        return acc;
-      }, {});
-    }
+    const activityWishes = userProfile.activityWishes;
 
-    return { userProfile, wishTotalCount, categoryCount };
+    const categoryCount = activityWishes.reduce((acc, wish) => {
+      const categoryName = wish.activity.activityCategory.name;
+      if (!acc[categoryName]) {
+        acc[categoryName] = 0;
+      }
+      acc[categoryName]++;
+      return acc;
+    }, {});
+
+    return {
+      userProfile: {
+        id: userProfile.id,
+        name: userProfile.name,
+        profileImage: userProfile.profileImage,
+        mbti: userProfile.mbti,
+        gender: userProfile.gender,
+        region: userProfile.region,
+        ageRange: userProfile.ageRange,
+      },
+      activityWishes: activityWishes.map((wish) => ({
+        id: wish.id,
+        activitiesId: wish.activitiesId,
+        activity: {
+          id: wish.activity.id,
+          coverImage: wish.activity.coverImage,
+          type: wish.activity.type,
+          activityCategory: {
+            name: wish.activity.activityCategory.name,
+          },
+        },
+      })),
+      wishTotalCount: activityWishes.length,
+      categoryCount,
+    };
   }
 
   async remove(id: number): Promise<void> {
