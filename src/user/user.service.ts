@@ -70,7 +70,6 @@ export class UserService {
     if (!user) {
       throw new UnauthorizedException('Invalid email or password.');
     }
-
     const isPasswordMatching = await bcrypt.compare(createUserDto.password, user.password);
     if (!isPasswordMatching) {
       throw new UnauthorizedException('Invalid email or password.');
