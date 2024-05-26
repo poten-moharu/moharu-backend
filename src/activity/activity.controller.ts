@@ -51,10 +51,12 @@ export class ActivityController {
   }
 
   @Get(':id')
+  @ApiBearerAuth('accessToken')
+  @UseGuards(OptionalAuthGuard)
   @ApiResponse({ status: 200, description: '활동 상세 정보를 반환합니다.', type: ActivityDetailResponseDto })
   @ApiResponse({ status: 404, description: '활동을 찾을 수 없습니다.' })
-  @UseGuards(OptionalAuthGuard)
-  async findOne(@OptionalUser() user?: UserEntity, @Param('id') id?: string): Promise<ActivityDetailResponseDto> {
+  async findOne(@Param('id') id?: string, @OptionalUser() user?: UserEntity): Promise<ActivityDetailResponseDto> {
+    console.log(user);
     return this.activityService.findOne(user, +id);
   }
   @Get('wish/list')

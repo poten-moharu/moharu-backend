@@ -111,7 +111,11 @@ export class ActivityService {
 
     let isWish = false;
     if (user) {
-      const wish = await this.activityWishRepository.findOne({ where: { userId: user.id, activitiesId: id } });
+      const wish = await this.activityWishRepository
+        .createQueryBuilder('wish')
+        .where('wish.userId = :userId', { userId: user.id })
+        .andWhere('wish.activitiesId = :activitiesId', { activitiesId: id })
+        .getOne();
       isWish = !!wish;
     }
 
