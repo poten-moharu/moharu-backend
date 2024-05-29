@@ -4,7 +4,6 @@ import { CreateActivityDto } from './dto/create-activity.dto';
 import { Activity } from './entity/activity.entity';
 import { User } from '../user/entity/user.entity';
 import { ActivityWishRepository } from '../activity-wish/activity-wish.repository';
-import { In } from 'typeorm';
 import { ActivityDetailResponseDto } from './dto/activity-detail-response.dto';
 import { ActivityWishlistResponseDto } from './dto/activity-wishlist-response.dto';
 
@@ -36,7 +35,6 @@ export class ActivityService {
       const mbtiPreferences = {
         INFP: {
           meeting: [1, 5, 6],
-          event: [1, 5, 6],
         },
         INFJ: {
           event: [1, 5, 6],
@@ -46,7 +44,7 @@ export class ActivityService {
         },
         ENFP: {
           meeting: [1, 5, 6],
-          event: [1, 5, 6],
+          event: [1, 5],
         },
         ISFP: {
           event: [1],
@@ -86,20 +84,33 @@ export class ActivityService {
         const eventCategories = preferences.event || [];
         const placeCategories = preferences.place || [];
 
-        query.andWhere(
-          '(activity.type = :meeting AND activity.categoryId IN (:...meetingCategories)) OR (activity.type = :event AND activity.categoryId IN (:...eventCategories)) OR (activity.type = :place AND activity.categoryId IN (:...placeCategories))',
-          {
-            meeting: 'meeting',
-            event: 'event',
-            place: 'place',
-            meetingCategories,
-            eventCategories,
-            placeCategories,
-          },
-        );
+        // 각 카테고리 배열이 비어 있지 않은 경우에만 쿼리 조건 추가
+        const conditions = [];
+        const params = {};
+
+        console.log(meetingCategories, eventCategories, placeCategories);
+
+        if (meetingCategories.length > 0) {
+          conditions.push('(activity.type = :meeting AND activity.categoryId IN (:...meetingCategories))');
+          params['meeting'] = 'meeting';
+          params['meetingCategories'] = meetingCategories;
+        }
+        if (eventCategories.length > 0) {
+          conditions.push('(activity.type = :event AND activity.categoryId IN (:...eventCategories))');
+          params['event'] = 'event';
+          params['eventCategories'] = eventCategories;
+        }
+        if (placeCategories.length > 0) {
+          conditions.push('(activity.type = :place AND activity.categoryId IN (:...placeCategories))');
+          params['place'] = 'place';
+          params['placeCategories'] = placeCategories;
+        }
+
+        if (conditions.length > 0) {
+          query.andWhere(conditions.join(' OR '), params);
+        }
       }
     }
-
     return query.getMany();
   }
 
