@@ -38,7 +38,7 @@ export class ActivityController {
     @Query('selectedDate') selectedDate?: string,
     @OptionalUser() user?: UserEntity,
   ) {
-    const activities = await this.activityService.findAll(categoryId, selectedDate);
+    const activities = await this.activityService.findAll(categoryId, selectedDate, user);
     let wishedActivityIds: number[] = [];
 
     if (user) {
